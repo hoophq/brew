@@ -1,0 +1,12 @@
+9a241348e30a63069f44430b791bb7cf40fad46b267f742cf1aa60c09aa57244  ./dist/binaries/hoop_1.23.2_Linux_x86_64.tar.gz
+3491b1b40d982fac77f7b47cde24e2a32a7fed09b783305a4e54508148d322e0  ./dist/binaries/hoop_1.23.2_Windows_arm64.tar.gz
+9a5b9594b46c607232d2708145482934996539d2085355124b69aaa97f6d3f2c  ./dist/binaries/hoop_1.23.2_Windows_amd64.tar.gz
+9a5b9594b46c607232d2708145482934996539d2085355124b69aaa97f6d3f2c  ./dist/binaries/hoop_1.23.2_Windows_x86_64.tar.gz
+af5fdeea7d3f196b7934089d458c0a11996b31a395c896b64a5cb8a2b4fea669  ./dist/binaries/hoop_1.23.2_Darwin_arm64.tar.gz
+af5fdeea7d3f196b7934089d458c0a11996b31a395c896b64a5cb8a2b4fea669  ./dist/binaries/hoop_1.23.2_Darwin_aarch64.tar.gz
+3491b1b40d982fac77f7b47cde24e2a32a7fed09b783305a4e54508148d322e0  ./dist/binaries/hoop_1.23.2_Windows_aarch64.tar.gz
+51111351ee367b1895e729c36b304163d9f12933f2a4e50ad76ad86fd39b7ecc  ./dist/binaries/hoop_1.23.2_Darwin_amd64.tar.gz
+abde002f7930a76462c6c6571879f554ca54d1571b0b9069df6f919a5a839729  ./dist/binaries/hoop_1.23.2_Linux_aarch64.tar.gz
+abde002f7930a76462c6c6571879f554ca54d1571b0b9069df6f919a5a839729  ./dist/binaries/hoop_1.23.2_Linux_arm64.tar.gz
+9a241348e30a63069f44430b791bb7cf40fad46b267f742cf1aa60c09aa57244  ./dist/binaries/hoop_1.23.2_Linux_amd64.tar.gz
+51111351ee367b1895e729c36b304163d9f12933f2a4e50ad76ad86fd39b7ecc  ./dist/binaries/hoop_1.23.2_Darwin_x86_64.tar.gz
