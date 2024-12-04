@@ -5,20 +5,20 @@
 class Hoop < Formula
   desc "Hoop allows acessing any infra-structure resource easily and secure."
   homepage "https://github.com/hoophq/hoop"
-  version "1.29.3-testci4"
+  version "1.29.2"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://releases.hoop.dev/release/1.29.3-testci4/hoop_1.29.3-testci4_Darwin_amd64.tar.gz"
-      sha256 "6561cd64a083996a665c3c0f6e1c7f318aa89315649c2a8af1f8e29bfcfd124e"
+      url "https://releases.hoop.dev/release/1.29.2/hoop_1.29.2_Darwin_amd64.tar.gz"
+      sha256 "0cb532e92e498aea1e348b95ec131d786fc9f0938a3f1704608d9370f942c2ff"
 
       def install
         bin.install "hoop"
       end
     end
     if Hardware::CPU.arm?
-      url "https://releases.hoop.dev/release/1.29.3-testci4/hoop_1.29.3-testci4_Darwin_arm64.tar.gz"
-      sha256 "2d29a8a6671e51bae6f2d0149ffd67425c679310eadeff6263fdd6d57f5e4da7"
+      url "https://releases.hoop.dev/release/1.29.2/hoop_1.29.2_Darwin_arm64.tar.gz"
+      sha256 "5cdc789a114c166675d22088f73e43554c24956acdf6539ceb6c0c2995cdeb3e"
 
       def install
         bin.install "hoop"
@@ -28,16 +28,16 @@ class Hoop < Formula
 
   on_linux do
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://releases.hoop.dev/release/1.29.3-testci4/hoop_1.29.3-testci4_Linux_arm64.tar.gz"
-      sha256 "b27d63b05638f053194da7433c49c3f9aa5a1ca4b822c8ef060d7e998ef2fc04"
+      url "https://releases.hoop.dev/release/1.29.2/hoop_1.29.2_Linux_arm64.tar.gz"
+      sha256 "cc42cdd63e96efe00ea015757445885d9a88c5a28d194e1f7fe5375127f64d30"
 
       def install
         bin.install "hoop"
       end
     end
     if Hardware::CPU.intel?
-      url "https://releases.hoop.dev/release/1.29.3-testci4/hoop_1.29.3-testci4_Linux_amd64.tar.gz"
-      sha256 "bf75263f894c68c3ad42f4c54a6d9f59f2503c9d6673f9be7bafdc2890923db9"
+      url "https://releases.hoop.dev/release/1.29.2/hoop_1.29.2_Linux_amd64.tar.gz"
+      sha256 "5ed4867fcf6f9cf2be1f9dc722bacc44ad31ba3982fb8491f481613d392b5ad8"
 
       def install
         bin.install "hoop"
