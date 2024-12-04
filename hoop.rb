@@ -5,20 +5,20 @@
 class Hoop < Formula
   desc "Hoop allows acessing any infra-structure resource easily and secure."
   homepage "https://github.com/hoophq/hoop"
-  version "1.29.2-testci2"
+  version "1.29.3-testci3"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://releases.hoop.dev/release/1.29.2-testci2/hoop_1.29.2-testci2_Darwin_amd64.tar.gz"
-      sha256 "05ff36018e55119a4dcd83e57e4bd6a8e81d66b5f9dc405e9c74961daa6aebbe"
+      url "https://releases.hoop.dev/release/1.29.3-testci3/hoop_1.29.3-testci3_Darwin_amd64.tar.gz"
+      sha256 "3373cc9b418027fe0f27e932b58917cfdaf517b706161085d3ffdbda627506a5"
 
       def install
         bin.install "hoop"
       end
     end
     if Hardware::CPU.arm?
-      url "https://releases.hoop.dev/release/1.29.2-testci2/hoop_1.29.2-testci2_Darwin_arm64.tar.gz"
-      sha256 "c2dc21cf2f5e149a1cec4a53172dce4278b013cc3ac3f939d012c5123d91cb71"
+      url "https://releases.hoop.dev/release/1.29.3-testci3/hoop_1.29.3-testci3_Darwin_arm64.tar.gz"
+      sha256 "7a0fede50e2c751f5282793a306d1b01f7548617a08635f2e968968d7f280ad0"
 
       def install
         bin.install "hoop"
@@ -28,16 +28,16 @@ class Hoop < Formula
 
   on_linux do
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://releases.hoop.dev/release/1.29.2-testci2/hoop_1.29.2-testci2_Linux_arm64.tar.gz"
-      sha256 "7d227c79d56debf8d16a31a7e2f9f55708a592257a59cd3f8dec36e696a1a08a"
+      url "https://releases.hoop.dev/release/1.29.3-testci3/hoop_1.29.3-testci3_Linux_arm64.tar.gz"
+      sha256 "235a7d8cb9d1d9b770709644fedd8ba24b6ebb8ab52d83fdf48760a2c35518cc"
 
       def install
         bin.install "hoop"
       end
     end
     if Hardware::CPU.intel?
-      url "https://releases.hoop.dev/release/1.29.2-testci2/hoop_1.29.2-testci2_Linux_amd64.tar.gz"
-      sha256 "50b184953c9bbfe94a1cee5c1704ce590972fd606b5c736932d512e24edc4b89"
+      url "https://releases.hoop.dev/release/1.29.3-testci3/hoop_1.29.3-testci3_Linux_amd64.tar.gz"
+      sha256 "700a2e49aa1bfd35acaa162291e8ac4a4c0cee7748a37495c4565d16bcc8984e"
 
       def install
         bin.install "hoop"
