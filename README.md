@@ -7,7 +7,7 @@ Homebrew recipe to install the Hoop command line
 - GitHub: https://github.com/hoophq/hoop
 
 ```sh
-brew tap hoophq/brew
+brew tap hoophq/brew https://github.com/hoophq/brew.git
 brew install hoop
 ```
 
