@@ -5,20 +5,20 @@
 class Hoop < Formula
   desc "Hoop allows acessing any infra-structure resource easily and secure."
   homepage "https://github.com/hoophq/hoop"
-  version "1.38.13"
+  version "1.39.0-beta1"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://releases.hoop.dev/release/1.38.13/hoop_1.38.13_Darwin_amd64.tar.gz"
-      sha256 "4471298bc272eabff5b39d4b01d2e81875738841adb8cbeb6101def931bd1dcb"
+      url "https://releases.hoop.dev/release/1.39.0-beta1/hoop_1.39.0-beta1_Darwin_amd64.tar.gz"
+      sha256 "56158f7371b3b7c151e674e06e213f5d70758b0df99ca3cae457d7ff4517b3eb"
 
       def install
         bin.install "hoop"
       end
     end
     if Hardware::CPU.arm?
-      url "https://releases.hoop.dev/release/1.38.13/hoop_1.38.13_Darwin_arm64.tar.gz"
-      sha256 "87e27bff7f471b602eced21290ff1b4bfa7dec4e4c57666d76e6739e6b187bb0"
+      url "https://releases.hoop.dev/release/1.39.0-beta1/hoop_1.39.0-beta1_Darwin_arm64.tar.gz"
+      sha256 "af493c91768b884783d678fe36d90d9fb3900f297d52f002774295a79d2c145c"
 
       def install
         bin.install "hoop"
@@ -28,16 +28,16 @@ class Hoop < Formula
 
   on_linux do
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://releases.hoop.dev/release/1.38.13/hoop_1.38.13_Linux_arm64.tar.gz"
-      sha256 "6316b6991b09ffd331b02db04d457a5dfa51f1a5c22cedc981dda920da3562dd"
+      url "https://releases.hoop.dev/release/1.39.0-beta1/hoop_1.39.0-beta1_Linux_arm64.tar.gz"
+      sha256 "be69fa9f28782fc7147b24c3ce182ba6fababa17e265ff934bd07d10d82f25c5"
 
       def install
         bin.install "hoop"
       end
     end
     if Hardware::CPU.intel?
-      url "https://releases.hoop.dev/release/1.38.13/hoop_1.38.13_Linux_amd64.tar.gz"
-      sha256 "4cb86fe52c9ed750bb28c80bcff1690d12c3ead466c3d4c398a74785d5cf08df"
+      url "https://releases.hoop.dev/release/1.39.0-beta1/hoop_1.39.0-beta1_Linux_amd64.tar.gz"
+      sha256 "86e3be88b28266ead6266d101813d0306b8617f73ce2fc898873a927c428f93c"
 
       def install
         bin.install "hoop"
