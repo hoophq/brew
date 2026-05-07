@@ -1,0 +1,59 @@
+name: Public Release (hsh)
+
+# Triggered two ways:
+#   1. Manual `workflow_dispatch` from the Actions UI \u2014 same UX as the
+#      existing hoop release workflow. Useful for backfilling a release or
+#      re-running after a transient failure.
+#   2. `repository_dispatch` event of type `hsh-release` \u2014 fired by the
+#      hsh repo's release.yml after it successfully creates a GitHub Release.
+#      The dispatched payload carries `client_payload.version` (e.g. "0.1.0",
+#      no leading 'v'). This is the happy path; brew formula is updated
+#      automatically every time we cut a hsh release.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'The hsh semver to publish (without leading v, e.g. 0.1.0)'
+        required: true
+        type: string
+  repository_dispatch:
+    types: [hsh-release]
+
+jobs:
+  publish-release:
+    runs-on: ubuntu-latest
+    name: Publish hsh formula
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: version
+        env:
+          DISPATCH_VERSION: ${{ github.event.client_payload.version }}
+          MANUAL_VERSION: ${{ inputs.version }}
+        run: |
+          # repository_dispatch fills in client_payload.version; manual run
+          # fills in inputs.version. Exactly one will be set.
+          VERSION="${DISPATCH_VERSION:-$MANUAL_VERSION}"
+          if [ -z "$VERSION" ]; then
+            echo "::error::no version provided (neither inputs.version nor client_payload.version)"
+            exit 1
+          fi
+          # Strip leading 'v' if someone passes it by mistake.
+          VERSION="${VERSION#v}"
+          # Sanity-check the shape so we fail fast on bad input.
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::version '$VERSION' is not a recognized semver"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Generate Brew Tap (hsh)
+        run: ./scripts/hsh-recipe.sh ${{ steps.version.outputs.version }}
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Release hsh ${{ steps.version.outputs.version }}"
+          file_pattern: hsh.rb
