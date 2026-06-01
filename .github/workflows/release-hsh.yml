@@ -116,14 +116,30 @@ jobs:
           # which is the same dir as brew itself, so that single entry
           # covers `hsh` / `hsh-tunneld` too.
 
-      - name: brew install the formula
+      - name: Install formula into a local tap and brew install it
         shell: bash
+        env:
+          # Runner's default HOMEBREW_CACHE (~/.cache/Homebrew) is not
+          # always writable; point at the runner temp dir to silence the
+          # warning and guarantee a writable cache.
+          HOMEBREW_CACHE: ${{ runner.temp }}/brew-cache
         run: |
           set -euxo pipefail
-          # --formula: treat the file as a formula, not a cask.
-          # Audit first for structural problems, then do the real install.
-          brew audit --formula --strict ./hsh.rb || true
-          brew install --formula --verbose ./hsh.rb
+          mkdir -p "$HOMEBREW_CACHE"
+          # Modern Homebrew refuses to install a formula from a loose
+          # path ("requires formulae to be in a tap"). Create a throwaway
+          # local tap, drop the generated formula into it, and install by
+          # the fully-qualified name — exactly how a user installs via
+          # `brew tap hoophq/brew && brew install hsh`.
+          TAP="hoophq/local-verify"
+          brew tap-new "$TAP" --no-git
+          TAP_DIR="$(brew --repository "$TAP")"
+          cp ./hsh.rb "$TAP_DIR/Formula/hsh.rb"
+          # Audit by name (path audits are disabled in current Homebrew).
+          # Non-fatal: a style nit shouldn't fail the release verify, but
+          # we surface it in the log.
+          brew audit --formula --strict "$TAP/hsh" || echo "::warning::brew audit reported issues (non-fatal)"
+          brew install --formula --verbose "$TAP/hsh"
 
       - name: Verify both binaries are on PATH and runnable
         run: |
