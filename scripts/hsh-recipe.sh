@@ -4,16 +4,34 @@
 # Usage:
 #   ./scripts/hsh-recipe.sh <version>
 #
-# Where <version> is the semver string WITHOUT the leading 'v' (e.g. 0.1.0).
+# Where <version> is the semver string WITHOUT the leading 'v' (e.g. 0.2.0).
 # The script downloads SHA256SUMS from
 #   https://github.com/hoophq/hsh/releases/download/v<version>/SHA256SUMS
 # extracts the per-platform checksums, and emits a hsh.rb formula that points
-# at the same release's binary assets.
+# at the same release's archive assets.
 #
-# Unlike hoop (which ships tar.gz archives via releases.hoop.dev), hsh ships
-# raw Bun-compiled binaries directly from GitHub Releases. The formula uses
-# `bin.install <binary> => "hsh"` to rename the platform-specific binary on
-# install so the user always gets `hsh` in $PATH.
+# Release format (since hsh v0.2.0 / RD-227): each platform ships a
+# compressed archive — `.tar.gz` on macOS/Linux, `.zip` on Windows —
+# whose single top-level directory `hsh-<target>/` contains:
+#
+#   hsh           the CLI
+#   hsh-tunneld   the tunnel daemon
+#   install.sh    service installer (run by the user with sudo)
+#   uninstall.sh  service uninstaller
+#   README.md
+#
+# Homebrew auto-extracts the archive into the buildpath but does NOT
+# strip the single leading `hsh-<target>/` directory (unlike a flat
+# tarball such as hoop's). The `install` block therefore references the
+# binaries through that directory, whose name matches the archive stem
+# (e.g. hsh-darwin-arm64.tar.gz -> hsh-darwin-arm64/).
+# We install BOTH `hsh` and `hsh-tunneld` onto PATH. Setting up the
+# daemon as a system service is an explicit, privileged user action
+# (`sudo hsh-tunneld install`) — a Homebrew formula runs unprivileged
+# and must never touch /etc, launchd, or systemd, so we deliberately do
+# NOT run install.sh here.
+#
+# Windows is intentionally absent: Homebrew targets macOS + Linux only.
 
 set -euox pipefail
 
@@ -25,12 +43,29 @@ BASE_URL="https://github.com/hoophq/hsh/releases/download/${TAG}"
 mkdir -p ./dist
 curl -fsSL "${BASE_URL}/SHA256SUMS" -o ./dist/hsh-checksums.txt
 
+# Archive asset filenames as published in the hsh release. These must
+# match exactly what scripts/build.ts produces on the hsh side; a drift
+# here surfaces as an empty checksum and the sanity-check below aborts.
+DARWIN_ARM64_ASSET="hsh-darwin-arm64.tar.gz"
+DARWIN_X64_ASSET="hsh-darwin-x64.tar.gz"
+LINUX_ARM64_ASSET="hsh-linux-arm64.tar.gz"
+LINUX_X64_ASSET="hsh-linux-x64.tar.gz"
+
+# The single top-level directory each archive unpacks into is the asset
+# name with the `.tar.gz` suffix stripped (build.ts uses the target name
+# as the archive's top-level dir). The formula references binaries
+# through it.
+DARWIN_ARM64_DIR="${DARWIN_ARM64_ASSET%.tar.gz}"
+DARWIN_X64_DIR="${DARWIN_X64_ASSET%.tar.gz}"
+LINUX_ARM64_DIR="${LINUX_ARM64_ASSET%.tar.gz}"
+LINUX_X64_DIR="${LINUX_X64_ASSET%.tar.gz}"
+
 # Extract checksums. The SHA256SUMS file is the standard `sha256sum`
 # format: `<hex-digest>  <filename>` (two spaces between digest and name).
-DARWIN_ARM64_CHECKSUM=$(awk '$2 == "hsh-darwin-arm64"  {print $1}' ./dist/hsh-checksums.txt)
-DARWIN_X64_CHECKSUM=$(awk   '$2 == "hsh-darwin-x64"    {print $1}' ./dist/hsh-checksums.txt)
-LINUX_ARM64_CHECKSUM=$(awk  '$2 == "hsh-linux-arm64"   {print $1}' ./dist/hsh-checksums.txt)
-LINUX_X64_CHECKSUM=$(awk    '$2 == "hsh-linux-x64"     {print $1}' ./dist/hsh-checksums.txt)
+DARWIN_ARM64_CHECKSUM=$(awk -v f="$DARWIN_ARM64_ASSET" '$2 == f {print $1}' ./dist/hsh-checksums.txt)
+DARWIN_X64_CHECKSUM=$(awk   -v f="$DARWIN_X64_ASSET"   '$2 == f {print $1}' ./dist/hsh-checksums.txt)
+LINUX_ARM64_CHECKSUM=$(awk  -v f="$LINUX_ARM64_ASSET"  '$2 == f {print $1}' ./dist/hsh-checksums.txt)
+LINUX_X64_CHECKSUM=$(awk    -v f="$LINUX_X64_ASSET"    '$2 == f {print $1}' ./dist/hsh-checksums.txt)
 
 # Sanity-check: every platform we reference in the formula must have a
 # checksum, otherwise brew install will fail with a confusing error.
@@ -54,40 +89,60 @@ class Hsh < Formula
 
   on_macos do
     if Hardware::CPU.arm?
-      url "${BASE_URL}/hsh-darwin-arm64"
+      url "${BASE_URL}/${DARWIN_ARM64_ASSET}"
       sha256 "$DARWIN_ARM64_CHECKSUM"
 
       def install
-        bin.install "hsh-darwin-arm64" => "hsh"
+        bin.install "${DARWIN_ARM64_DIR}/hsh"
+        bin.install "${DARWIN_ARM64_DIR}/hsh-tunneld"
       end
     end
     if Hardware::CPU.intel?
-      url "${BASE_URL}/hsh-darwin-x64"
+      url "${BASE_URL}/${DARWIN_X64_ASSET}"
       sha256 "$DARWIN_X64_CHECKSUM"
 
       def install
-        bin.install "hsh-darwin-x64" => "hsh"
+        bin.install "${DARWIN_X64_DIR}/hsh"
+        bin.install "${DARWIN_X64_DIR}/hsh-tunneld"
       end
     end
   end
 
   on_linux do
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "${BASE_URL}/hsh-linux-arm64"
+      url "${BASE_URL}/${LINUX_ARM64_ASSET}"
       sha256 "$LINUX_ARM64_CHECKSUM"
 
       def install
-        bin.install "hsh-linux-arm64" => "hsh"
+        bin.install "${LINUX_ARM64_DIR}/hsh"
+        bin.install "${LINUX_ARM64_DIR}/hsh-tunneld"
       end
     end
     if Hardware::CPU.intel?
-      url "${BASE_URL}/hsh-linux-x64"
+      url "${BASE_URL}/${LINUX_X64_ASSET}"
       sha256 "$LINUX_X64_CHECKSUM"
 
       def install
-        bin.install "hsh-linux-x64" => "hsh"
+        bin.install "${LINUX_X64_DIR}/hsh"
+        bin.install "${LINUX_X64_DIR}/hsh-tunneld"
       end
     end
+  end
+
+  def caveats
+    <<~EOS
+      hsh and hsh-tunneld are now on your PATH.
+
+      To run the tunnel daemon as a system service, install it with
+      elevated privileges (sets up a systemd unit on Linux / LaunchDaemon
+      on macOS):
+
+        sudo hsh-tunneld install
+
+      To remove the service later:
+
+        sudo hsh-tunneld uninstall
+    EOS
   end
 
   test do

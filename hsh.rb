@@ -5,44 +5,64 @@
 class Hsh < Formula
   desc "Hoop Shell Plugins - seamless access to infrastructure via shell integration"
   homepage "https://github.com/hoophq/hsh"
-  version "0.1.0"
+  version "0.2.0"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/hoophq/hsh/releases/download/v0.1.0/hsh-darwin-arm64"
-      sha256 "aee7b03534868c53c293202b571999331a2eae9c56dffa1c49c3d5dbc97e5d16"
+      url "https://github.com/hoophq/hsh/releases/download/v0.2.0/hsh-darwin-arm64.tar.gz"
+      sha256 "05762c35518a4703d4f70a62e02706fd7e9f4f95606c268561f0ed0013721d87"
 
       def install
-        bin.install "hsh-darwin-arm64" => "hsh"
+        bin.install "hsh-darwin-arm64/hsh"
+        bin.install "hsh-darwin-arm64/hsh-tunneld"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/hoophq/hsh/releases/download/v0.1.0/hsh-darwin-x64"
-      sha256 "7fea267b279bd9ffeea4134a69bd5f106b77c35b81d311453fcc0973d81cd643"
+      url "https://github.com/hoophq/hsh/releases/download/v0.2.0/hsh-darwin-x64.tar.gz"
+      sha256 "fbbd7dc33745e2a0001707b93a6303a2fba9f88de664e8145744db57591eea4d"
 
       def install
-        bin.install "hsh-darwin-x64" => "hsh"
+        bin.install "hsh-darwin-x64/hsh"
+        bin.install "hsh-darwin-x64/hsh-tunneld"
       end
     end
   end
 
   on_linux do
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/hoophq/hsh/releases/download/v0.1.0/hsh-linux-arm64"
-      sha256 "92be9dd8a0d4eb87dccd724cb4a157f7e10c68fa1789979bdcf388138a168749"
+      url "https://github.com/hoophq/hsh/releases/download/v0.2.0/hsh-linux-arm64.tar.gz"
+      sha256 "a2f6d16213501300b7771283b45b25e87bf82b70e5dcc2b7b6d1bb2740fd47e6"
 
       def install
-        bin.install "hsh-linux-arm64" => "hsh"
+        bin.install "hsh-linux-arm64/hsh"
+        bin.install "hsh-linux-arm64/hsh-tunneld"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/hoophq/hsh/releases/download/v0.1.0/hsh-linux-x64"
-      sha256 "4b988481334ed15d6b54b9e8d76e495e0bbb207bf197b3aa0f50854e77e85578"
+      url "https://github.com/hoophq/hsh/releases/download/v0.2.0/hsh-linux-x64.tar.gz"
+      sha256 "a41fa621202a473c5582338099bc0705dff4b939b515532e8ef80172fba94935"
 
       def install
-        bin.install "hsh-linux-x64" => "hsh"
+        bin.install "hsh-linux-x64/hsh"
+        bin.install "hsh-linux-x64/hsh-tunneld"
       end
     end
+  end
+
+  def caveats
+    <<~EOS
+      hsh and hsh-tunneld are now on your PATH.
+
+      To run the tunnel daemon as a system service, install it with
+      elevated privileges (sets up a systemd unit on Linux / LaunchDaemon
+      on macOS):
+
+        sudo hsh-tunneld install
+
+      To remove the service later:
+
+        sudo hsh-tunneld uninstall
+    EOS
   end
 
   test do
