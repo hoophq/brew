@@ -20,11 +20,11 @@
 #   uninstall.sh  service uninstaller
 #   README.md
 #
-# Homebrew auto-extracts the archive into the buildpath but does NOT
-# strip the single leading `hsh-<target>/` directory (unlike a flat
-# tarball such as hoop's). The `install` block therefore references the
-# binaries through that directory, whose name matches the archive stem
-# (e.g. hsh-darwin-arm64.tar.gz -> hsh-darwin-arm64/).
+# Homebrew auto-extracts the archive and, via UnpackStrategy's
+# `extract_nestedly`, collapses the single top-level `hsh-<target>/`
+# directory so the buildpath ends up *inside* it. The `install` block
+# therefore references the binaries by their bare names (hsh,
+# hsh-tunneld) at the buildpath root — NOT through the directory.
 # We install BOTH `hsh` and `hsh-tunneld` onto PATH. Setting up the
 # daemon as a system service is an explicit, privileged user action
 # (`sudo hsh-tunneld install`) — a Homebrew formula runs unprivileged
@@ -50,15 +50,6 @@ DARWIN_ARM64_ASSET="hsh-darwin-arm64.tar.gz"
 DARWIN_X64_ASSET="hsh-darwin-x64.tar.gz"
 LINUX_ARM64_ASSET="hsh-linux-arm64.tar.gz"
 LINUX_X64_ASSET="hsh-linux-x64.tar.gz"
-
-# The single top-level directory each archive unpacks into is the asset
-# name with the `.tar.gz` suffix stripped (build.ts uses the target name
-# as the archive's top-level dir). The formula references binaries
-# through it.
-DARWIN_ARM64_DIR="${DARWIN_ARM64_ASSET%.tar.gz}"
-DARWIN_X64_DIR="${DARWIN_X64_ASSET%.tar.gz}"
-LINUX_ARM64_DIR="${LINUX_ARM64_ASSET%.tar.gz}"
-LINUX_X64_DIR="${LINUX_X64_ASSET%.tar.gz}"
 
 # Extract checksums. The SHA256SUMS file is the standard `sha256sum`
 # format: `<hex-digest>  <filename>` (two spaces between digest and name).
@@ -93,8 +84,8 @@ class Hsh < Formula
       sha256 "$DARWIN_ARM64_CHECKSUM"
 
       def install
-        bin.install "${DARWIN_ARM64_DIR}/hsh"
-        bin.install "${DARWIN_ARM64_DIR}/hsh-tunneld"
+        bin.install "hsh"
+        bin.install "hsh-tunneld"
       end
     end
     if Hardware::CPU.intel?
@@ -102,8 +93,8 @@ class Hsh < Formula
       sha256 "$DARWIN_X64_CHECKSUM"
 
       def install
-        bin.install "${DARWIN_X64_DIR}/hsh"
-        bin.install "${DARWIN_X64_DIR}/hsh-tunneld"
+        bin.install "hsh"
+        bin.install "hsh-tunneld"
       end
     end
   end
@@ -114,8 +105,8 @@ class Hsh < Formula
       sha256 "$LINUX_ARM64_CHECKSUM"
 
       def install
-        bin.install "${LINUX_ARM64_DIR}/hsh"
-        bin.install "${LINUX_ARM64_DIR}/hsh-tunneld"
+        bin.install "hsh"
+        bin.install "hsh-tunneld"
       end
     end
     if Hardware::CPU.intel?
@@ -123,8 +114,8 @@ class Hsh < Formula
       sha256 "$LINUX_X64_CHECKSUM"
 
       def install
-        bin.install "${LINUX_X64_DIR}/hsh"
-        bin.install "${LINUX_X64_DIR}/hsh-tunneld"
+        bin.install "hsh"
+        bin.install "hsh-tunneld"
       end
     end
   end

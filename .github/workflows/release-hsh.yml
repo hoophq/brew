@@ -24,6 +24,8 @@ jobs:
   publish-release:
     runs-on: ubuntu-latest
     name: Publish hsh formula
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -53,7 +55,53 @@ jobs:
       - name: Generate Brew Tap (hsh)
         run: ./scripts/hsh-recipe.sh ${{ steps.version.outputs.version }}
 
+      - name: Upload generated formula
+        uses: actions/upload-artifact@v4
+        with:
+          name: hsh-formula
+          path: hsh.rb
+
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Release hsh ${{ steps.version.outputs.version }}"
           file_pattern: hsh.rb
+
+  # Real `brew install` of the generated formula on both supported
+  # platforms. Catches drift between the hsh release format (archive
+  # naming, internal directory layout) and what the formula expects —
+  # the class of bug that shipped a broken formula for v0.2.0. Runs
+  # after generation so it tests the exact artifact we publish.
+  verify:
+    needs: publish-release
+    name: Verify brew install (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - name: Download generated formula
+        uses: actions/download-artifact@v4
+        with:
+          name: hsh-formula
+
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: brew install the formula
+        run: |
+          # --formula: treat the file as a formula, not a cask.
+          # Audit first for structural problems, then do the real install.
+          brew audit --formula --strict ./hsh.rb || true
+          brew install --formula --verbose ./hsh.rb
+
+      - name: Verify both binaries are on PATH and runnable
+        run: |
+          set -euxo pipefail
+          # hsh must report the released version.
+          hsh --version
+          hsh --version | grep -F "${{ needs.publish-release.outputs.version }}"
+          # hsh-tunneld must be installed and at least respond to --version
+          # (it does not need root just to print its version).
+          command -v hsh-tunneld
+          hsh-tunneld --version || hsh-tunneld version

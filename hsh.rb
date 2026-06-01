@@ -13,8 +13,8 @@ class Hsh < Formula
       sha256 "05762c35518a4703d4f70a62e02706fd7e9f4f95606c268561f0ed0013721d87"
 
       def install
-        bin.install "hsh-darwin-arm64/hsh"
-        bin.install "hsh-darwin-arm64/hsh-tunneld"
+        bin.install "hsh"
+        bin.install "hsh-tunneld"
       end
     end
     if Hardware::CPU.intel?
@@ -22,8 +22,8 @@ class Hsh < Formula
       sha256 "fbbd7dc33745e2a0001707b93a6303a2fba9f88de664e8145744db57591eea4d"
 
       def install
-        bin.install "hsh-darwin-x64/hsh"
-        bin.install "hsh-darwin-x64/hsh-tunneld"
+        bin.install "hsh"
+        bin.install "hsh-tunneld"
       end
     end
   end
@@ -34,8 +34,8 @@ class Hsh < Formula
       sha256 "a2f6d16213501300b7771283b45b25e87bf82b70e5dcc2b7b6d1bb2740fd47e6"
 
       def install
-        bin.install "hsh-linux-arm64/hsh"
-        bin.install "hsh-linux-arm64/hsh-tunneld"
+        bin.install "hsh"
+        bin.install "hsh-tunneld"
       end
     end
     if Hardware::CPU.intel?
@@ -43,8 +43,8 @@ class Hsh < Formula
       sha256 "a41fa621202a473c5582338099bc0705dff4b939b515532e8ef80172fba94935"
 
       def install
-        bin.install "hsh-linux-x64/hsh"
-        bin.install "hsh-linux-x64/hsh-tunneld"
+        bin.install "hsh"
+        bin.install "hsh-tunneld"
       end
     end
   end
