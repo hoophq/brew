@@ -5,12 +5,12 @@
 class Hsh < Formula
   desc "Hoop Shell Plugins - seamless access to infrastructure via shell integration"
   homepage "https://github.com/hoophq/hsh"
-  version "0.2.0"
+  version "0.3.0"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/hoophq/hsh/releases/download/v0.2.0/hsh-darwin-arm64.tar.gz"
-      sha256 "05762c35518a4703d4f70a62e02706fd7e9f4f95606c268561f0ed0013721d87"
+      url "https://github.com/hoophq/hsh/releases/download/v0.3.0/hsh-darwin-arm64.tar.gz"
+      sha256 "e94d6577017a73ed2b75fec1944538cf21780b9704090168796d330b84d7659d"
 
       def install
         bin.install "hsh"
@@ -18,8 +18,8 @@ class Hsh < Formula
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/hoophq/hsh/releases/download/v0.2.0/hsh-darwin-x64.tar.gz"
-      sha256 "fbbd7dc33745e2a0001707b93a6303a2fba9f88de664e8145744db57591eea4d"
+      url "https://github.com/hoophq/hsh/releases/download/v0.3.0/hsh-darwin-x64.tar.gz"
+      sha256 "c6c95d9a35ba507db77af85970b7321e8751d61586eefcf0e64d38893a0fccb5"
 
       def install
         bin.install "hsh"
@@ -30,8 +30,8 @@ class Hsh < Formula
 
   on_linux do
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/hoophq/hsh/releases/download/v0.2.0/hsh-linux-arm64.tar.gz"
-      sha256 "a2f6d16213501300b7771283b45b25e87bf82b70e5dcc2b7b6d1bb2740fd47e6"
+      url "https://github.com/hoophq/hsh/releases/download/v0.3.0/hsh-linux-arm64.tar.gz"
+      sha256 "ae654077d954682ffe76d9f5cdab2cc3a8b80cac4991643b147f4e81b141cba6"
 
       def install
         bin.install "hsh"
@@ -39,8 +39,8 @@ class Hsh < Formula
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/hoophq/hsh/releases/download/v0.2.0/hsh-linux-x64.tar.gz"
-      sha256 "a41fa621202a473c5582338099bc0705dff4b939b515532e8ef80172fba94935"
+      url "https://github.com/hoophq/hsh/releases/download/v0.3.0/hsh-linux-x64.tar.gz"
+      sha256 "2b95d9d152d36d22ec363f0400b0e876d964666f71fd6e2b7dcdd60133f9a8c0"
 
       def install
         bin.install "hsh"
