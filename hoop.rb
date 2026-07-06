@@ -5,20 +5,20 @@
 class Hoop < Formula
   desc "Hoop allows acessing any infra-structure resource easily and secure."
   homepage "https://github.com/hoophq/hoop"
-  version "1.108.10"
+  version "1.108.11"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://releases.hoop.dev/release/1.108.10/hoop_1.108.10_Darwin_amd64.tar.gz"
-      sha256 "da6a79e76e69026147e89ca4e31314664ea68b22571b4455bfc198897da164b7"
+      url "https://releases.hoop.dev/release/1.108.11/hoop_1.108.11_Darwin_amd64.tar.gz"
+      sha256 "cbbb82109ee214e8bc610dc0822bdda2ebe6bf6d01d7199e1c41082facae9fd6"
 
       def install
         bin.install "hoop"
       end
     end
     if Hardware::CPU.arm?
-      url "https://releases.hoop.dev/release/1.108.10/hoop_1.108.10_Darwin_arm64.tar.gz"
-      sha256 "b1a7739549c7b21b041ed3496e9b5ed18998ff57d85de91f7d7e061e1ad76662"
+      url "https://releases.hoop.dev/release/1.108.11/hoop_1.108.11_Darwin_arm64.tar.gz"
+      sha256 "edfaf1dc1a5538fd844af8f0a75ab599e859bd5fab3996c17c35f7e79e962af6"
 
       def install
         bin.install "hoop"
@@ -28,16 +28,16 @@ class Hoop < Formula
 
   on_linux do
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://releases.hoop.dev/release/1.108.10/hoop_1.108.10_Linux_arm64.tar.gz"
-      sha256 "0772ec140d95a57084f910999944cda9b49459c03de521e8170236283d9e4ed0"
+      url "https://releases.hoop.dev/release/1.108.11/hoop_1.108.11_Linux_arm64.tar.gz"
+      sha256 "fa07fe9f62f227132105573d756766006ec208c3a57a94d13e569c1aa46aabce"
 
       def install
         bin.install "hoop"
       end
     end
     if Hardware::CPU.intel?
-      url "https://releases.hoop.dev/release/1.108.10/hoop_1.108.10_Linux_amd64.tar.gz"
-      sha256 "ac36dcc5edfe1f0212434236f0b289abdcffb89a27b45e9651dc4ba47f6fa050"
+      url "https://releases.hoop.dev/release/1.108.11/hoop_1.108.11_Linux_amd64.tar.gz"
+      sha256 "fece7ef4b6f0dbc8c64d27d9822152d1000e729977a539ccd1cbf83c71ca2093"
 
       def install
         bin.install "hoop"
